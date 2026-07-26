@@ -1,0 +1,16 @@
+[project]
+name = "dist-train"
+version = "0.1.0"
+description = "Distributed training from scratch: ring all-reduce, data/tensor/pipeline parallel"
+requires-python = ">=3.11"
+dependencies = ["torch>=2.2", "numpy>=1.26"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["dt*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

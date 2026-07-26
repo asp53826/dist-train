@@ -1,0 +1,31 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -r requirements-dev.txt
+      # every collective is compared against torch.distributed's own version,
+      # at world sizes that divide evenly and world sizes that don't
+      - run: pytest -q
+
+  scaling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -r requirements-dev.txt
+      - run: python bench/scaling.py --worlds 1,2 --d-model 256 --layers 4 --steps 5 --collective-sizes 65536 --collective-iters 3
