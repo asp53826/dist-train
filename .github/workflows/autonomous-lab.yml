@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
   pull_request_target:
     types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ["ci"]
+    types: [completed]
 
 permissions:
   contents: read
@@ -54,7 +57,17 @@ jobs:
   dependency-caretaker:
     if: github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]'
     permissions:
+      pull-requests: write
+    uses: asp53826/portfolio-ops/.github/workflows/dependency-caretaker.yml@v1.1.0
+
+  dependency-merger:
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      startsWith(github.event.workflow_run.head_branch, 'dependabot/')
+    permissions:
+      actions: read
+      checks: read
       contents: write
       pull-requests: write
-    uses: asp53826/portfolio-ops/.github/workflows/dependency-caretaker.yml@v1.0.0
-
+    uses: asp53826/portfolio-ops/.github/workflows/dependency-merger.yml@v1.1.0
