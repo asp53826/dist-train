@@ -23,7 +23,7 @@ jobs:
     if: github.event_name != 'pull_request_target' && github.event.schedule != '17 8 1 * *'
     permissions:
       contents: read
-    uses: asp53826/portfolio-ops/.github/workflows/repo-medic.yml@v1.0.0
+    uses: asp53826/portfolio-ops/.github/workflows/repo-medic.yml@v1.2.0
     with:
       runtime: python
       runtime-version: "3.12"
@@ -43,7 +43,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || github.event.schedule == '17 8 1 * *'
     permissions:
       contents: read
-    uses: asp53826/portfolio-ops/.github/workflows/benchmark-keeper.yml@v1.0.0
+    uses: asp53826/portfolio-ops/.github/workflows/benchmark-keeper.yml@v1.2.0
     with:
       runtime: python
       runtime-version: "3.12"
